@@ -12,8 +12,9 @@ module CarrierWave
       include CarrierWave::Uploader::Cache
 
       class RemoteFile
-        def initialize(uri)
+        def initialize(uri, referer = nil)
           @uri = uri
+          @referer = referer
         end
 
         def original_filename
@@ -36,7 +37,11 @@ module CarrierWave
 
         def file
           if @file.blank?
-            @file = Kernel.open(@uri.to_s)
+            if @referer
+              @file = Kernel.open(@uri.to_s, @referer)
+            else
+              @file = Kernel.open(@uri.to_s)
+            end
             @file = @file.is_a?(String) ? StringIO.new(@file) : @file
           end
           @file
@@ -57,9 +62,9 @@ module CarrierWave
       #
       # [url (String)] The URL where the remote file is stored
       #
-      def download!(uri)
+      def download!(uri, referer = nil)
         processed_uri = process_uri(uri)
-        file = RemoteFile.new(processed_uri)
+        file = RemoteFile.new(processed_uri, referer)
         raise CarrierWave::DownloadError, "trying to download a file which is not served over HTTP" unless file.http?
         cache!(file)
       end

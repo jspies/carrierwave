@@ -292,7 +292,7 @@ module CarrierWave
     # we don't pollute the model with a lot of methods.
     class Mounter #:nodoc:
       attr_reader :column, :record, :remote_url, :integrity_error, :processing_error, :download_error
-      attr_accessor :remove
+      attr_accessor :remove, :referer
 
       def initialize(record, column, options={})
         @record = record
@@ -349,7 +349,7 @@ module CarrierWave
         @download_error = nil
         @integrity_error = nil
 
-        uploader.download!(url)
+        uploader.download!(url, referer)
 
       rescue CarrierWave::DownloadError => e
         @download_error = e
