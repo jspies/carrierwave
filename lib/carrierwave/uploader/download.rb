@@ -38,7 +38,7 @@ module CarrierWave
         def file
           if @file.blank?
             if @referer
-              @file = Kernel.open(@uri.to_s, @referer)
+              @file = Kernel.open(@uri.to_s, "Referer" => @referer)
             else
               @file = Kernel.open(@uri.to_s)
             end
