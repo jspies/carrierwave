@@ -187,6 +187,14 @@ module CarrierWave
           _mounter(:#{column}).remote_url = url
         end
 
+        def #{column}_referer=(referer)
+          _mounter(:#{column}).referer = referer
+        end
+
+        def #{column}_referer
+          _mounter(:#{column}).referer
+        end
+
         def remove_#{column}
           _mounter(:#{column}).remove
         end
